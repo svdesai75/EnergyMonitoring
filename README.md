@@ -33,4 +33,5 @@ pip install --upgrade pip
 ```commandline
 pip install neurio
 pip install  solaredge
+pip install SQLAlchemy
 ```
