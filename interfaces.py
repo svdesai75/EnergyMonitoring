@@ -26,3 +26,5 @@ def loadNeurioClient(cfg):
     tp = neurio.TokenProvider(key=clientID, secret=secret)
 
     return  neurio.Client(token_provider=tp)
+
+# TODO: add interface to utilityAPI
