@@ -34,4 +34,5 @@ pip install --upgrade pip
 pip install neurio
 pip install  solaredge
 pip install SQLAlchemy
+pip install pandas
 ```
