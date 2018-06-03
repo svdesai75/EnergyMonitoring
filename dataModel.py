@@ -6,9 +6,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-#from energyMonitorConfig import *
-from interfaces import *
+from energyMonitorConfig import *
+from interfaces import SolarEdgeClient
+from interfaces import NeurioClient
 
+import pandas as pd
 
 Base = declarative_base()
 
@@ -31,7 +33,7 @@ class GenerationMonitor(Base):
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType=='SolarEdge':
-            self.client=SolarEdgeClient(cfg,self.id)
+            self.client=SolarEdgeClient.SolarEdgeClient(cfg,self.id)
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType )
 
@@ -51,12 +53,11 @@ class ConsumptionMonitor(Base):
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType == 'Neurio':
-            self.client = NeurioClient(cfg, self.id)
+            self.client = NeurioClient.NeurioClient(cfg, self.id)
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
     def fetchConsumptionData(self,start,end, granularity="days"):
-
         data = self.client.fetchConsumptionData(start, end, granularity)
         return data
 
@@ -74,6 +75,13 @@ class RentalUnit(Base):
     consumptionMonitorID = Column(String(250), ForeignKey('consumptionMonitor.id'), nullable=False)
     consumptionFraction  = Column(      Float, nullable=False)
     consumptionMonitor   = relationship(ConsumptionMonitor)
+
+    def getEnergyData(self,startTime,endTime):
+        generationData  = self.generationMonitor .fetchProductionData(startTime, endTime)
+        consumptionData = self.consumptionMonitor.fetchConsumptionData(startTime, endTime, granularity="hours")
+        combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
+
+        return combined
 
     ##property
     propertyID           = Column(String(250), nullable=False)
