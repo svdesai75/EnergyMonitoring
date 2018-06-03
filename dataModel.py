@@ -37,9 +37,9 @@ class GenerationMonitor(Base):
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType )
 
-    def fetchProductionData(self, start, end):
+    def fetchProductionData(self, start, end, timeUnit):
 
-        data=self.client.getProductionData(start, end)
+        data=self.client.getProductionData(start, end, timeUnit)
         return data
 
 #corresponds to a neurio home energy monitor or similar
@@ -57,8 +57,8 @@ class ConsumptionMonitor(Base):
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
-    def fetchConsumptionData(self,start,end, granularity="days"):
-        data = self.client.fetchConsumptionData(start, end, granularity)
+    def fetchConsumptionData(self,start,end, timeUnit):
+        data = self.client.fetchConsumptionData(start, end, timeUnit)
         return data
 
 # Todo: Add interface to utilityAPI
@@ -76,9 +76,11 @@ class RentalUnit(Base):
     consumptionFraction  = Column(      Float, nullable=False)
     consumptionMonitor   = relationship(ConsumptionMonitor)
 
-    def getEnergyData(self,startTime,endTime):
-        generationData  = self.generationMonitor .fetchProductionData(startTime, endTime)
-        consumptionData = self.consumptionMonitor.fetchConsumptionData(startTime, endTime, granularity="hours")
+    def getEnergyData(self,startTime,endTime, timeUnit):
+        # TODO: apply production and consumption shares to generation and consumption data
+        # TODO: shape tables (drop appropriate columns, rename columns, apply any other ETL ops)
+        generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
+        consumptionData = self.consumptionMonitor.fetchConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
 
         return combined
