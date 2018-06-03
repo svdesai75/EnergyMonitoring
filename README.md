@@ -32,7 +32,7 @@ pip install --upgrade pip
 #### Install packages
 ```commandline
 pip install neurio
-pip install  solaredge
+pip install solaredge
 pip install SQLAlchemy
 pip install pandas
 ```
