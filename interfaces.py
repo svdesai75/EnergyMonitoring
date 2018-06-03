@@ -5,7 +5,9 @@ import pandas as pd
 import neurio
 import solaredge
 
-class solarEdgeClient:
+#TODO make consistent granularity specifiers
+
+class SolarEdgeClient:
     
     def __init__(self,cfg,monitorID):
 
@@ -14,17 +16,36 @@ class solarEdgeClient:
 
         self.client =  solaredge.Solaredge(key)
 
-    def getEnergyProduction(self,start,end):
-        siteEnergy=self.client.get_energy_details_dataframe(site_id=self.siteID,start_time=pd.to_datetime(start),end_time=pd.to_datetime(end),time_unit="HOUR")
+    def getProductionData(self, start, end):
+        siteEnergy=self.client.get_energy_details_dataframe(site_id=self.siteID,start_time=start,end_time=end,time_unit="HOUR")
+        siteEnergy.reset_index(level=0, inplace=True)
+        siteEnergy.date=pd.to_datetime(siteEnergy.date)
         return siteEnergy
-     
-def loadNeurioClient(cfg):
-    
-    clientID=cfg.get("neurio","clientID")
-    secret=cfg.get("neurio","secret")
 
-    tp = neurio.TokenProvider(key=clientID, secret=secret)
+class NeurioClient:
 
-    return  neurio.Client(token_provider=tp)
+    def __init__(self,cfg,monitorID):
+
+        self.monitorID=monitorID
+
+        clientID=cfg.get("neurio","clientID")
+        secret=cfg.get("neurio","secret")
+
+        tp = neurio.TokenProvider(key=clientID, secret=secret)
+        self.client=neurio.Client(token_provider=tp)
+
+    def fetchConsumptionData(self, start, end, granularity):
+
+        raw=self.client.get_samples_stats(sensor_id=self.monitorID,
+                                          start=start.isoformat(),
+                                          end=end.isoformat(),
+                                          granularity=granularity)
+
+        df=pd.DataFrame(raw)
+        df.start = pd.to_datetime(df.start).dt.tz_localize('America/Chicago').dt.tz_convert("America/Chicago")
+        df.end   = pd.to_datetime(  df.end).dt.tz_localize('America/Chicago').dt.tz_convert("America/Chicago")
+
+        return df
+
 
 # TODO: add interface to utilityAPI
