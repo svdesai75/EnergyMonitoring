@@ -15,8 +15,8 @@ https://pypi.org/project/solaredge/
 
 
 The APIs are documented at:
-https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf
-https://api-docs.neur.io/
+* https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf
+* https://api-docs.neur.io/
 
 
 Tool to extract power usage from multiple neur.io Home Energy Monitors  at same house and single meter to compute individual tenant usage
@@ -35,4 +35,5 @@ pip install neurio
 pip install solaredge
 pip install SQLAlchemy
 pip install pandas
+pip install openpyxl
 ```
