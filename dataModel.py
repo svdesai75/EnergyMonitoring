@@ -77,12 +77,13 @@ class RentalUnit(Base):
     consumptionMonitor   = relationship(ConsumptionMonitor)
 
     def getEnergyData(self,startTime,endTime, timeUnit):
-        # TODO: apply production and consumption shares to generation and consumption data
-        # TODO: shape tables (drop appropriate columns, rename columns, apply any other ETL ops)
         generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
         consumptionData = self.consumptionMonitor.fetchConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
-
+        combined.drop(['start','end'], axis=1,inplace=True)
+        combined.rename({'Production':'producedEnergy', 'consumptionEnergy':'consumedEnergy'},axis='columns', inplace=True)
+        combined.producedEnergy *= self.generationFraction
+        combined.producedEnergy *= self.consumptionFraction
         return combined
 
     ##property
