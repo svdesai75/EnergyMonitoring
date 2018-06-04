@@ -37,6 +37,7 @@ class NeurioClient:
                                           frequency=frequency)
 
         df=pd.DataFrame(raw)
+        df.consumptionEnergy *= (1/1000./3600.) #convert Ws -> kWH
         df.start = pd.to_datetime(df.start).dt.tz_localize('America/Chicago').dt.tz_convert("America/Chicago")
         df.end   = pd.to_datetime(  df.end).dt.tz_localize('America/Chicago').dt.tz_convert("America/Chicago")
 

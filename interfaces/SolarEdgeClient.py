@@ -20,4 +20,5 @@ class SolarEdgeClient:
         siteEnergy=self.client.get_energy_details_dataframe(site_id=self.siteID, start_time=start, end_time=end, time_unit=timeUnit)
         siteEnergy.reset_index(level=0, inplace=True)
         siteEnergy.date=pd.to_datetime(siteEnergy.date)
+        siteEnergy.Production *= (1/1000.) #convert Wh -> kWH
         return siteEnergy
