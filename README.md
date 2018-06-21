@@ -36,4 +36,17 @@ pip install solaredge
 pip install SQLAlchemy
 pip install pandas
 pip install openpyxl
+pip install bokeh
 ```
+
+#### Goals
+
+* Tenant billing: produce an app to read electric bill from utility, defines billing end points and
+  calculates amount to bill/refund tenant.
+* Need persistance model for billing, production, conusmption data
+  - save data
+  - load data
+* Analytics (plots):
+  - overlay consumption and production vs time (for rental unit, for building)
+  - net consumption vs time
+  - value of electricity consumption vs time
