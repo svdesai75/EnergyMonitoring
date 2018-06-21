@@ -43,6 +43,10 @@ pip install bokeh
 
 * Tenant billing: produce an app to read electric bill from utility, defines billing end points and
   calculates amount to bill/refund tenant.
+* App for adding new
+  - rental units
+  - generation monitors
+  - consumption monitors
 * Need persistance model for billing, production, conusmption data
   - save data
   - load data
