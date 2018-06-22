@@ -18,7 +18,7 @@ from bokeh.models import ColumnDataSource
 # https://github.com/bokeh/bokeh/blob/master/examples/app/stocks/main.py
 # https://demo.bokehplots.com/apps/stocks
 # want to use LRU at some point?  Could be valualble....
-# TODO: add summary table
+# TODO: bugfix on min/max dates
 
 io_loop = IOLoop.current()
 
