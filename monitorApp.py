@@ -12,6 +12,7 @@ from bokeh.server.server import Server
 from bokeh.models.widgets import Div
 from bokeh.models.widgets import DatePicker
 from bokeh.models.widgets import Select
+from bokeh.models.widgets import DataTable, TableColumn, NumberFormatter
 from bokeh.models import ColumnDataSource
 
 # https://github.com/bokeh/bokeh/blob/master/examples/app/stocks/main.py
@@ -29,6 +30,7 @@ maxTimeDelta=timedelta(days=30)
 #####################
 ## Data sources
 energyPlottingData=ColumnDataSource(data=dict(date=[],producedEnergy=[],consumedEnergy=[]))
+summaryDataSource=ColumnDataSource(data=dict(fieldNames=[],values=[]))
 
 #####################
 ## Selection Widgets
@@ -43,6 +45,14 @@ maxDate=datetime.today()
 minDate=maxDate-maxTimeDelta
 startDatePicker=DatePicker(title="Start Date", value=minDate, min_date=minDate, max_date=maxDate)
 endDatePicker  =DatePicker(title=  "End Date", value=maxDate, min_date=minDate, max_date=maxDate)
+
+#####################
+## Summary Table
+summaryRows=["Produced", "Used", "Net Consumption"]
+summaryColumns=[TableColumn(field="fieldNames",title="fields"),
+                TableColumn(field="values",title="values",formatter=NumberFormatter(format='0,0',language='en'))]
+summaryTableTitle=Div(text='<h2>Summary (kWh)</h2>')
+summaryTable=DataTable(source=summaryDataSource,columns=summaryColumns,index_position=None, width=300)
 
 #####################
 ## Plots
@@ -64,20 +74,28 @@ def updateEndDate(attrname, old, new):
     updateDisplay()
 
 def updateDisplay():
+
     statusText.text=loadingText
+
     selectedUnit=rentalUnitSelector.value
-    #print("selecting unit ", selectedUnit)
     startTime=pd.to_datetime(startDatePicker.value)
-    #print ("selecting start ", startTime)
     endTime=pd.to_datetime(endDatePicker.value)
-    #print ("selecting end ", endTime)
+    #print("Start and end dates: ",startTime,endTime)
+
     unit=session.query(RentalUnit).filter(RentalUnit.unitName==selectedUnit).one()
+    energyPlot.title.text=unit.unitName
+
     time_unit = "HOUR"
-    #print(startTime,endTime)
     energyDataFrame = unit.getEnergyData(startTime, endTime, time_unit)
+
+    totalProduced=energyDataFrame.producedEnergy.sum()
+    totalUsed=energyDataFrame.consumedEnergy.sum()
+    netConsumption=totalUsed-totalProduced
+    summaryData=[totalProduced,totalUsed,netConsumption]
+    summaryDataSource.data={"fieldNames":summaryRows,"values":summaryData}
     #print(energyDataFrame)
     energyPlottingData.data = energyPlottingData.from_df(energyDataFrame)
-    energyPlot.title.text=unit.unitName
+
     statusText.text=doneText
 
 rentalUnitSelector.on_change('value', updateRentalUnit)
@@ -85,29 +103,9 @@ startDatePicker   .on_change('value',  updateStartDate)
 endDatePicker     .on_change('value',    updateEndDate)
 
 def monitoringApp(doc):
-    # startTime=pd.to_datetime('2018-04-21 08:00:00')
-    # endTime=pd.to_datetime('2018-05-20 01:00:00')
-
-    #plots=[]
-
-    # rentalUnits=session.query(RentalUnit).all()
-    # for unit in rentalUnits:
-    #     print("===================")
-    #     print (unit.unitName)
-    #     print (unit.propertyID)
-    #     #time_unit="QUARTER_OF_AN_HOUR"
-    #     time_unit="HOUR"
-    #     energyDataFrame=unit.getEnergyData(startTime, endTime, time_unit)
-    #     energyPlottingData=ColumnDataSource.from_df(energyDataFrame)
-    #     #print (combined.head())
-    #     #print (combined.producedEnergy.sum())
-    #     unitPlot=figure(title=unit.unitName,x_axis_type="datetime",plot_width=1000,plot_height=400)
-    #     unitPlot.line("date", "producedEnergy",source=energyPlottingData,legend="Solar Production",color="blue")
-    #     unitPlot.line("date", "consumedEnergy",source=energyPlottingData,legend="Usage",color="red")
-    #     plots.append(unitPlot)
 
     datePickers=row(startDatePicker, endDatePicker)
-    widgets=column(row(rentalUnitSelector,statusText),datePickers)
+    widgets=column(row(rentalUnitSelector,statusText),datePickers,summaryTableTitle,summaryTable)
     plotsCol=column(energyPlot)
     layout=row(widgets,plotsCol)
 
