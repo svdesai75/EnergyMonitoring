@@ -7,8 +7,8 @@ logLevel="debug"
 
 def printLevel(messageLevel):
     messageLevel=logLevels.index(messageLevel)
-    logLevel=logLevels.index(logLevel)
-    return logLevel >= messageLevel
+    threshold=logLevels.index(logLevel)
+    return messageLevel >= threshold
 
 def printMessage(message):
     logFile.write(message)
