@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import sqlalchemy
 from configparser import ConfigParser
 
 energyMonitorDir=os.path.expandvars('${HOME}/.EnergyMonitor')
