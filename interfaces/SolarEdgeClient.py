@@ -1,5 +1,6 @@
 import pandas as pd
 import solaredge
+import logger
 
 
 class SolarEdgeClient:
@@ -12,6 +13,10 @@ class SolarEdgeClient:
         self.client =  solaredge.Solaredge(key)
 
     def getProductionData(self, start, end, timeUnit):
+
+        logger.debug("Fetching production data")
+        logger.debug(self.siteID)
+        logger.debug("%s to %s" %(start.isoformat(),end.isoformat()))
 
         validGranularities=['QUARTER_OF_AN_HOUR', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR']
         if timeUnit not in validGranularities:
