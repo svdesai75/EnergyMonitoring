@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from dataModel import *
+import logger
+
 from datetime import datetime, timedelta
 from bokeh.plotting import figure
 from bokeh.layouts import  row, column
@@ -66,16 +68,23 @@ def updateRentalUnit(attrname, old, new):
 def updateStartDate(attrname, old, new):
     endDatePicker.min_date=new
     endDatePicker.max_date=new + maxTimeDelta
+    logger.debug("updateStartDate")
     updateDisplay()
 
 def updateEndDate(attrname, old, new):
     startDatePicker.min_date=new - maxTimeDelta
     startDatePicker.max_date=new
+    logger.debug("updateEndDate")
     updateDisplay()
 
 def updateDisplay():
 
     statusText.text=loadingText
+
+#    logger.debug(" startMin: %s"% startDatePicker.min)
+#    logger.debug(" startMax: %s"% startDatePicker.max)
+#    logger.debug(" endMin: %s"% endDatePicker.min)
+#    logger.debug(" endMax: %s"% endDatePicker.max)
 
     selectedUnit=rentalUnitSelector.value
     startTime=pd.to_datetime(startDatePicker.value)
