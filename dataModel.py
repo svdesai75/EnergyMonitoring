@@ -29,6 +29,7 @@ class GenerationMonitor(Base):
     
     id            = Column(String(250), nullable=False, primary_key=True)
     monitorType   = Column(String(250), nullable=False)
+    timeZone      = Column(String(250), nullable=False)
 
     @orm.reconstructor
     def init_on_load(self):
@@ -48,7 +49,7 @@ class ConsumptionMonitor(Base):
     
     id            = Column(String(250), nullable=False, primary_key=True)
     monitorType   = Column(String(250), nullable=False)
-
+    timeZone      = Column(String(250), nullable=False)
 
     @orm.reconstructor
     def init_on_load(self):
