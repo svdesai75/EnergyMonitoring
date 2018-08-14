@@ -34,9 +34,9 @@ class GenerationMonitor(Base):
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType=='SolarEdge':
-            self.client=SolarEdgeClient.SolarEdgeClient(cfg,self.id)
+            self.client=SolarEdgeClient.SolarEdgeClient(cfg,self.id, self.timeZone)
         else:
-            raise Exception("Unknown monitor type %s" % self.monitorType )
+            raise Exception("Unknown monitor type %s" % self.monitorType)
 
     def fetchProductionData(self, start, end, timeUnit):
 
@@ -54,7 +54,7 @@ class ConsumptionMonitor(Base):
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType == 'Neurio':
-            self.client = NeurioClient.NeurioClient(cfg, self.id)
+            self.client = NeurioClient.NeurioClient(cfg, self.id, self.timeZone)
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
