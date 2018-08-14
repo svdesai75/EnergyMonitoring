@@ -37,6 +37,7 @@ pip install SQLAlchemy
 pip install pandas
 pip install openpyxl
 pip install bokeh
+pip install xlwt
 ```
 
 #### Goals
