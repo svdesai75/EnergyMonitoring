@@ -7,14 +7,13 @@ import pytz
 from energyMonitorConfig import energyMonitorDir
 import logger
 
-TimeZone='America/Chicago'
-
 class NeurioClient:
 
-    def __init__(self,cfg,monitorID):
+    def __init__(self,cfg,monitorID, timeZone):
 
         logger.debug("Instantiating Neurio Client for monitor %s" % monitorID)
         self.monitorID=monitorID
+        self.timeZone=timeZone
 
         clientID=cfg.get("neurio","clientID")
         secret=cfg.get("neurio","secret")
@@ -73,8 +72,8 @@ class NeurioClient:
         ## after being put into data frame, formatted like
         ## convert to local timezone, eg:2018-08-08T00:45:00.000Z, 2018-08-08T00:45:03.314Z
         ## example format afterwards is '2018-08-08 01:10:00-05:00'
-        df.start = pd.to_datetime(df.start).dt.tz_localize('UTC').dt.tz_convert(TimeZone)
-        df.end   = pd.to_datetime(  df.end).dt.tz_localize('UTC').dt.tz_convert(TimeZone)
+        df.start = pd.to_datetime(df.start).dt.tz_localize('UTC').dt.tz_convert(self.timeZone)
+        df.end   = pd.to_datetime(  df.end).dt.tz_localize('UTC').dt.tz_convert(self.timeZone)
 
         return df
 

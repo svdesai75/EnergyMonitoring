@@ -5,12 +5,16 @@ import logger
 
 class SolarEdgeClient:
 
-    def __init__(self,cfg,monitorID):
+    def __init__(self,cfg,monitorID,timeZone):
 
         self.siteID = monitorID
         key         = cfg.get("solaredge","key")
 
         self.client =  solaredge.Solaredge(key)
+
+        #thus far, there appears to be no need to make use of this, but we at least ensure the field is there
+        # in case this turns out not to be the case
+        self.timeZone=timeZone
 
     def getProductionData(self, start, end, timeUnit):
 
