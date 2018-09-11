@@ -2,7 +2,7 @@
 import sys
 
 logFile=sys.stdout
-logLevels=["debug","info","error"]
+logLevels=["debug","info","warn","error"]
 logLevel="debug"
 
 def printLevel(messageLevel):
