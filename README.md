@@ -40,7 +40,6 @@ pip install bokeh
 pip install xlwt
 pip install ipython
 pip install pymongo
-
 ```
 ### Database packages
 
