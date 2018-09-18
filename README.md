@@ -39,6 +39,12 @@ pip install openpyxl
 pip install bokeh
 pip install xlwt
 ```
+### Database packages
+
+We also rely on the [sqlite](https://www.sqlite.org/index.html "SQLite") and
+[mongodb](ttps://www.mongodb.com "MongoDB") database packages.  Install according
+to your OS instructions. In the future, other relational databases (such as postgres)
+may be supported as an alternative to sqlite.
 
 #### Goals
 
