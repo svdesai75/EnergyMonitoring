@@ -3,7 +3,7 @@ import solaredge
 import logger
 
 
-class SolarEdgeClient:
+class SolarEdgeHandler:
 
     def __init__(self,cfg,monitorID,timeZone):
 
