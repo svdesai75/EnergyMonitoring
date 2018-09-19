@@ -3,7 +3,7 @@ import os
 from configparser import ConfigParser
 
 energyMonitorDir=os.path.expandvars('${HOME}/.EnergyMonitor')
-energyMonitorDB='sqlite:///'+os.path.join(energyMonitorDir,'EnergyMonitor.db')
+interfaceDBConnectionString= 'sqlite:///' + os.path.join(energyMonitorDir, 'EnergyMonitor.db')
 
 def loadCfg():
     
