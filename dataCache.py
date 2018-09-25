@@ -2,6 +2,11 @@
 from energyMonitorConfig import *
 from pymongo import MongoClient
 import pymongo
+import logger
+
+##TODO implement check on MongoDB status
+##TODO Factorize deviceData code from DataCache
+
 
 class DataCache:
     def __init__(self):
@@ -15,6 +20,7 @@ class DataCache:
         return client
 
     def initDataCache(self):
+        logger.info("Initializing dataCache")
         self.client.drop_database('dataCache')
         self.db=self.client['dataCache']
 
@@ -24,6 +30,7 @@ class DataCache:
 
         ## create collection for billing data
         self.db.create_collection(name='billingData')
+        logger.info("done initializing dataCache")
 
     def addDeviceDataSingleRecord(self,deviceType,deviceID, timeUnit,timeStamp, record):
         deviceData=self.db['deviceData']
