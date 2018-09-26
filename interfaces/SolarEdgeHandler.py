@@ -5,9 +5,11 @@ import logger
 
 class SolarEdgeHandler:
 
-    def __init__(self,cfg,monitorID,timeZone):
+    def __init__(self,cfg,monitorID,timeZone, activationTime):
 
         self.siteID = monitorID
+        self.activationTime=activationTime
+
         key         = cfg.get("solaredge","key")
 
         self.client =  solaredge.Solaredge(key)
