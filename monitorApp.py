@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from dataModel import *
+from connectionModel import *
 import logger
 
 from datetime import datetime, timedelta
