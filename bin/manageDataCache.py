@@ -22,7 +22,6 @@ subParser.required=True
 subParsers={}
 subParsers[         "initDB"]={"help":               "Re-initialize DB","func":dataCache.initDataCache}
 subParsers[    "listDevices"]={"help":                   "List devices","func":listDevices}
-subParsers["clearAllDevices"]={"help":     "Clear data for all devices","func":actionNotSupported}
 subParsers[    "clearDevice"]={"help": "Clear data for specific device","func":actionNotSupported}
 subParsers[     "viewDevice"]={"help":  "View data for specific device","func":actionNotSupported}
 
