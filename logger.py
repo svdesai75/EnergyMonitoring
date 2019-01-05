@@ -22,3 +22,6 @@ def info(message):
 
 def warn(message):
     if printLevel("warn"): printMessage(message)
+
+def error(message):
+    if printLevel("error"): printMessage(message)
