@@ -7,15 +7,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from energyMonitorConfig import *
-from interfaces import SolarEdgeClient
-from interfaces import NeurioClient
+from interfaces import SolarEdgeHandler
+from interfaces import NeurioHandler
 
 import pandas as pd
 
 Base = declarative_base()
 
 def createDBEngine():
-    return create_engine(energyMonitorDB)
+    return create_engine(interfaceDBConnectionString)
 
 def dbConnect(engine):
     Base.metadata.bind = engine 
@@ -30,11 +30,12 @@ class GenerationMonitor(Base):
     id            = Column(String(250), nullable=False, primary_key=True)
     monitorType   = Column(String(250), nullable=False)
     timeZone      = Column(String(250), nullable=False)
+    activationTime= Column(String(250), nullable=False)
 
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType=='SolarEdge':
-            self.client=SolarEdgeClient.SolarEdgeClient(cfg,self.id, self.timeZone)
+            self.client=SolarEdgeHandler.SolarEdgeHandler(cfg, self.id, self.timeZone, self.activationTime)
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
@@ -50,16 +51,17 @@ class ConsumptionMonitor(Base):
     id            = Column(String(250), nullable=False, primary_key=True)
     monitorType   = Column(String(250), nullable=False)
     timeZone      = Column(String(250), nullable=False)
+    activationTime= Column(String(250), nullable=False)
 
     @orm.reconstructor
     def init_on_load(self):
         if self.monitorType == 'Neurio':
-            self.client = NeurioClient.NeurioClient(cfg, self.id, self.timeZone)
+            self.client = NeurioHandler.NeurioHandler(cfg, self.id, self.timeZone, self.activationTime)
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
     def fetchConsumptionData(self,start,end, timeUnit):
-        data = self.client.fetchConsumptionData(start, end, timeUnit)
+        data = self.client.downloadData(start, end, timeUnit)
         return data
 
 # Todo: Add interface to utilityAPI
@@ -79,7 +81,7 @@ class RentalUnit(Base):
 
     def getEnergyData(self,startTime,endTime, timeUnit):
         generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
-        consumptionData = self.consumptionMonitor.fetchConsumptionData(startTime, endTime, timeUnit)
+        consumptionData = self.consumptionMonitor.getConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
         combined.drop(['start','end'], axis=1,inplace=True)
         combined.rename({'Production':'producedEnergy', 'consumptionEnergy':'consumedEnergy'},axis='columns', inplace=True)
