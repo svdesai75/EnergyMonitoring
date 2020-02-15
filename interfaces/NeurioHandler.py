@@ -91,10 +91,10 @@ class NeurioHandler:
         #self.persistData(raw,timeUnit)
         return (raw)
 
-    def getLatestTimestamp(self,timeUnit):
+    def getLatestTimestamp(self, timeUnit):
         latestTimestamp=self.dataCache.
 
-    def updateDataCache(self,timeUnit):
+    def updateDataCache(self, timeUnit):
 
         granularity, frequency, maxSpan = granularityInfo[timeUnit]
 
