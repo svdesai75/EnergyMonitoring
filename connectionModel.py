@@ -14,8 +14,10 @@ import pandas as pd
 
 Base = declarative_base()
 
+
 def createDBEngine():
     return create_engine(interfaceDBConnectionString)
+
 
 def dbConnect(engine):
     Base.metadata.bind = engine 
@@ -23,7 +25,8 @@ def dbConnect(engine):
     session = dbSession()
     return session
 
- #corresponds to a solar generation monitor
+
+# corresponds to a solar generation monitor
 class GenerationMonitor(Base):
     __tablename__ = 'generationMonitor'
     
@@ -41,10 +44,11 @@ class GenerationMonitor(Base):
 
     def fetchProductionData(self, start, end, timeUnit):
 
-        data=self.client.getProductionData(start, end, timeUnit)
+        data = self.client.getProductionData(start, end, timeUnit)
         return data
 
-#corresponds to a neurio home energy monitor or similar
+
+# corresponds to a neurio home energy monitor or similar
 class ConsumptionMonitor(Base):
     __tablename__ = 'consumptionMonitor'
     
@@ -65,21 +69,22 @@ class ConsumptionMonitor(Base):
         return data
 
 # Todo: Add interface to utilityAPI
-    
+
+
 class RentalUnit(Base):
     __tablename__ = 'rentalUnit'
-    unitName= Column(String(250), nullable=False, primary_key=True)
+    unitName = Column(String(250), nullable=False, primary_key=True)
     
     generationMonitorID = Column(String(250), ForeignKey('generationMonitor.id'), nullable=True)
     generationFraction  = Column(      Float, nullable=True)
     generationMonitor   = relationship(GenerationMonitor)
 
-    ##consumption monitor
+    # consumption monitor
     consumptionMonitorID = Column(String(250), ForeignKey('consumptionMonitor.id'), nullable=False)
     consumptionFraction  = Column(      Float, nullable=False)
     consumptionMonitor   = relationship(ConsumptionMonitor)
 
-    def getEnergyData(self,startTime,endTime, timeUnit):
+    def getEnergyData(self,startTime, endTime, timeUnit):
         generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
         consumptionData = self.consumptionMonitor.getConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
@@ -113,7 +118,7 @@ cfg=loadCfg()
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
-engine=createDBEngine()
+engine = createDBEngine()
  
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.
