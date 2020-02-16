@@ -5,8 +5,11 @@ from pymongo.errors import ServerSelectionTimeoutError
 import pymongo
 import logger
 
-##TODO implement check on MongoDB status
-##TODO Factorize deviceData code from DataCache
+# Relies on Mongodb
+# Mongodb instance must be running.  To start execute
+# mongod --dbpath /path/to/data/db
+# TODO implement check on MongoDB status
+# TODO Factorize deviceData code from DataCache
 
 
 class DataCache:
