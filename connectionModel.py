@@ -84,12 +84,14 @@ class RentalUnit(Base):
     consumptionFraction  = Column(      Float, nullable=False)
     consumptionMonitor   = relationship(ConsumptionMonitor)
 
-    def getEnergyData(self,startTime, endTime, timeUnit):
+    def getEnergyData(self, startTime, endTime, timeUnit):
         generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
         consumptionData = self.consumptionMonitor.getConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
-        combined.drop(['start','end'], axis=1,inplace=True)
-        combined.rename({'Production':'producedEnergy', 'consumptionEnergy':'consumedEnergy'},axis='columns', inplace=True)
+        combined.drop(['start', 'end'], axis=1, inplace=True)
+        combined.rename({'Production': 'producedEnergy', 'consumptionEnergy': 'consumedEnergy'},
+                        axis='columns',
+                        inplace=True)
         combined.producedEnergy *= self.generationFraction
         combined.producedEnergy *= self.consumptionFraction
         return combined
