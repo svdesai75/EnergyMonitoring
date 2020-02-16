@@ -64,8 +64,8 @@ class ConsumptionMonitor(Base):
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
-    def fetchConsumptionData(self,start,end, timeUnit):
-        data = self.client.downloadData(start, end, timeUnit)
+    def download_consumption_data(self, start, end, time_unit):
+        data = self.client.downloadData(start, end, time_unit)
         return data
 
 # Todo: Add interface to utilityAPI
