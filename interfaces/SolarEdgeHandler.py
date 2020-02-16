@@ -5,31 +5,34 @@ import logger
 
 class SolarEdgeHandler:
 
-    def __init__(self,cfg,monitorID,timeZone, activationTime):
+    def __init__(self, cfg, monitor_id, time_zone, activation_time):
 
-        self.siteID = monitorID
-        self.activationTime=activationTime
+        self.site_id = monitor_id
+        self.activationTime = activation_time
 
-        key         = cfg.get("solaredge","key")
+        key         = cfg.get("solaredge", "key")
 
         self.client =  solaredge.Solaredge(key)
 
-        #thus far, there appears to be no need to make use of this, but we at least ensure the field is there
+        # thus far, there appears to be no need to make use of this, but we at least ensure the field is there
         # in case this turns out not to be the case
-        self.timeZone=timeZone
+        self.timeZone = time_zone
 
-    def download(self, start, end, timeUnit):
+    def download(self, start, end, time_unit):
 
         logger.debug("Fetching production data")
-        logger.debug(self.siteID)
-        logger.debug("%s to %s" %(start.isoformat(),end.isoformat()))
+        logger.debug(self.site_id)
+        logger.debug("{} to {}".format(start.isoformat(), end.isoformat()))
 
-        validGranularities=['QUARTER_OF_AN_HOUR', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR']
-        if timeUnit not in validGranularities:
-            raise Exception('Invalid time_unit %s' % timeUnit)
+        valid_granularities=['QUARTER_OF_AN_HOUR', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR']
+        if time_unit not in valid_granularities:
+            raise Exception('Invalid time_unit {}'.format(time_unit))
 
-        siteEnergy=self.client.get_energy_details_dataframe(site_id=self.siteID, start_time=start, end_time=end, time_unit=timeUnit)
-        siteEnergy.reset_index(level=0, inplace=True)
-        siteEnergy.date=pd.to_datetime(siteEnergy.date)
-        siteEnergy.Production *= (1/1000.) #convert Wh -> kWH
-        return siteEnergy
+        site_energy = self.client.get_energy_details_dataframe(site_id=self.site_id,
+                                                               start_time=start,
+                                                               end_time=end,
+                                                               time_unit=time_unit)
+        site_energy.reset_index(level=0, inplace=True)
+        site_energy.date = pd.to_datetime(site_energy.date)
+        site_energy.Production *= (1/1000.)  # convert Wh -> kWH
+        return site_energy
