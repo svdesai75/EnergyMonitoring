@@ -18,33 +18,34 @@ granularityInfo['DAY']                = (   'days',  1,   92)  # max 92 day time
 granularityInfo['MONTH']              = ( 'months',  1,  365)  # max 1 year timespan
 granularityInfo['YEAR']               = (  'years',  1, 3650)  # max 10y timespan
 
+
 class NeurioHandler:
 
-    def __init__(self,cfg,monitorID, timeZone, activationTime):
+    def __init__(self, cfg, monitorID, timeZone, activationTime):
 
         logger.debug("Instantiating Neurio Client for monitor %s" % monitorID)
-        self.monitorType="neurio"
-        self.monitorID=monitorID
-        self.timeZone=timeZone
-        self.activationTime=activationTime
+        self.monitorType = "neurio"
+        self.monitorID = monitorID
+        self.timeZone = timeZone
+        self.activationTime = activationTime
 
-        clientID=cfg.get(self.monitorType,"clientID")
-        secret=cfg.get(self.monitorType,"secret")
+        clientID = cfg.get(self.monitorType, "clientID")
+        secret = cfg.get(self.monitorType, "secret")
 
         tp = neurio.TokenProvider(key=clientID, secret=secret)
         self.client=neurio.Client(token_provider=tp) ## interface to remote data
         self.dataCache=DataCache()
 
-        self.dataLoc=os.path.join(energyMonitorDir,"data","neurio",monitorID)
+        self.dataLoc=os.path.join(energyMonitorDir, "data", "neurio", monitorID)
         if not os.path.isdir(self.dataLoc):
             os.makedirs(self.dataLoc)
 
         logger.debug("Neurio client data dir = %s" % self.dataLoc)
 
     def getConsumptionData(self, start, end, timeUnit):
-        raw=self.dataCache.getDeviceData(self.monitorType,self.monitorID,start,end,timeUnit)
+        raw = self.dataCache.getDeviceData(self.monitorType, self.monitorID, start, end, timeUnit)
 
-        df=pd.DataFrame(raw)
+        df = pd.DataFrame(raw)
         df.consumptionEnergy *= (1/1000./3600.) #convert Ws -> kWH
 
         ##raw start and end dates are returned in GMT:  eg '2018-08-08T00:50:00.000Z'
@@ -80,31 +81,31 @@ class NeurioHandler:
         if timeUnit not in granularityInfo.keys():
             raise Exception ('Invalid time_unit %s' % timeUnit)
 
-        granularity,frequency, maxSpan = granularityInfo[timeUnit]
+        granularity, frequency, maxSpan = granularityInfo[timeUnit]
         raw=self.client.get_samples_stats(sensor_id=self.monitorID,
                                           start=start.isoformat(),
                                           end=end.isoformat(),
                                           granularity=granularity,
                                           frequency=frequency)
-        ##TODO Implement error checking on response
+        # TODO Implement error checking on response
 
-        #self.persistData(raw,timeUnit)
+        # self.persistData(raw,timeUnit)
         return (raw)
 
-    def getLatestTimestamp(self, timeUnit):
-        latestTimestamp=self.dataCache.
+    # def getLatestTimestamp(self, timeUnit):
+    #     latestTimestamp=self.dataCache.
 
     def updateDataCache(self, timeUnit):
 
         granularity, frequency, maxSpan = granularityInfo[timeUnit]
 
-        latestTimeStamp=self.dataCache.getDeviceLatestTimestamp(self.monitorType,self.monitorID,timeUnit)
+        latestTimeStamp=self.dataCache.getDeviceLatestTimestamp(self.monitorType, self.monitorID, timeUnit)
         currentTimeStamp=datetime.now()
         while latestTimeStamp < currentTimeStamp:
-            start=something
-            end=start + timedelta(days=maxSpan)
+            start = something
+            end = start + timedelta(days=maxSpan)
 
-            data=self.downloadData(start,end,timeUnit)
+            data = self.downloadData(start, end, timeUnit)
             self.dataCache.addDeviceDataMultipleRecords(self.monitorType, self.monitorID, timeUnit, 'start', data)
 
             latestTimeStamp = self.dataCache.getDeviceLatestTimestamp(self.monitorType, self.monitorID, timeUnit)
