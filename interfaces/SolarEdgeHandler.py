@@ -24,8 +24,8 @@ class SolarEdgeHandler:
         logger.debug(self.site_id)
         logger.debug("{} to {}".format(start.isoformat(), end.isoformat()))
 
-        valid_granularities=['QUARTER_OF_AN_HOUR', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR']
-        if time_unit not in valid_granularities:
+        valid_time_units = ['QUARTER_OF_AN_HOUR', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR']
+        if time_unit not in valid_time_units:
             raise Exception('Invalid time_unit {}'.format(time_unit))
 
         site_energy = self.client.get_energy_details_dataframe(site_id=self.site_id,
