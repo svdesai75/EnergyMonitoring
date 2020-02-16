@@ -18,7 +18,7 @@ class SolarEdgeHandler:
         # in case this turns out not to be the case
         self.timeZone=timeZone
 
-    def getProductionData(self, start, end, timeUnit):
+    def download(self, start, end, timeUnit):
 
         logger.debug("Fetching production data")
         logger.debug(self.siteID)

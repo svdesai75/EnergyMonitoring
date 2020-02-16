@@ -42,9 +42,9 @@ class GenerationMonitor(Base):
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
-    def fetchProductionData(self, start, end, timeUnit):
+    def download(self, start, end, time_unit):
 
-        data = self.client.getProductionData(start, end, timeUnit)
+        data = self.client.download(start, end, time_unit)
         return data
 
 
@@ -64,8 +64,8 @@ class ConsumptionMonitor(Base):
         else:
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
-    def download_consumption_data(self, start, end, time_unit):
-        data = self.client.downloadData(start, end, time_unit)
+    def download(self, start, end, time_unit):
+        data = self.client.download(start, end, time_unit)
         return data
 
 # Todo: Add interface to utilityAPI
@@ -85,7 +85,7 @@ class RentalUnit(Base):
     consumptionMonitor   = relationship(ConsumptionMonitor)
 
     def getEnergyData(self, startTime, endTime, timeUnit):
-        generationData  = self.generationMonitor .fetchProductionData(startTime, endTime, timeUnit)
+        generationData  = self.generationMonitor .download(startTime, endTime, timeUnit)
         consumptionData = self.consumptionMonitor.getConsumptionData(startTime, endTime, timeUnit)
         combined = pd.merge(generationData, consumptionData, left_on=["date"], right_on=["start"])
         combined.drop(['start', 'end'], axis=1, inplace=True)
@@ -116,7 +116,7 @@ class RentalUnit(Base):
 #        return
 
 
-cfg=loadCfg()
+cfg = loadCfg()
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
