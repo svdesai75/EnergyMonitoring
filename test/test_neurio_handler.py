@@ -4,8 +4,6 @@ import pytz
 from datetime import datetime, timedelta
 import logger
 
-TimeZone = 'America/Chicago'
-
 logger.logLevel = "debug"
 engine = createDBEngine()
 session = dbConnect(engine)
@@ -14,19 +12,19 @@ units = session.query(RentalUnit).all()
 lastUnit = units[-1]
 
 nc = lastUnit.consumptionMonitor.client
-monitorID = lastUnit.consumptionMonitor.client.monitorID
+monitor_id = lastUnit.consumptionMonitor.client.monitor_id
 print(lastUnit.unitName)
 print(nc)
-print(monitorID)
+print(monitor_id)
 
 
 def make_date_time(year, month, day, hour, tz):
     tz_info = pytz.timezone(tz)
-    return tz_info.localize(datetime(year=year,month=month,day=day,hour=hour))
+    return tz_info.localize(datetime(year=year, month=month, day=day, hour=hour))
 
 
-startDate = make_date_time(year=2020, month=1, day=14, hour=21, tz='America/Chicago')
-endDate   = make_date_time(year=2020, month=1, day=15, hour=21, tz='America/Chicago')
+startDate = make_date_time(year=2020, month=1, day=14, hour=21, tz=nc.time_zone)
+endDate   = make_date_time(year=2020, month=1, day=15, hour=21, tz=nc.time_zone)
 
 print("Start: ", startDate)
 print("  End: ",   endDate)

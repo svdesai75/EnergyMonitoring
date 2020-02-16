@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from connectionModel import *
 from datetime import datetime, timedelta
-TimeZone = 'America/Chicago'
 
 engine = createDBEngine()
 session = dbConnect(engine)

@@ -20,13 +20,13 @@ granularityInfo['YEAR']               = (  'years',  1, 3650)  # max 10y timespa
 
 class NeurioHandler:
 
-    def __init__(self, cfg, monitorID, time_zone, activationTime):
+    def __init__(self, cfg, monitor_id, time_zone, activation_time):
 
-        logger.debug("Instantiating Neurio Client for monitor %s" % monitorID)
+        logger.debug("Instantiating Neurio Client for monitor %s" % monitor_id)
         self.monitorType = "neurio"
-        self.monitorID = monitorID
+        self.monitor_id = monitor_id
         self.time_zone = time_zone
-        self.activationTime = activationTime
+        self.activation_time = activation_time
 
         clientID = cfg.get(self.monitorType, "clientID")
         secret = cfg.get(self.monitorType, "secret")
@@ -37,8 +37,8 @@ class NeurioHandler:
     def download_raw(self, start, end, time_unit):
 
         logger.debug("download consumption data")
-        logger.debug(self.monitorID)
-        logger.debug("%s to %s" %(start.isoformat(),end.isoformat()))
+        logger.debug(self.monitor_id)
+        logger.debug("{} to {}".format(start.isoformat(), end.isoformat()))
 
         if start.tzinfo is None:
             logger.warn("start date has no timezone info")
@@ -58,7 +58,7 @@ class NeurioHandler:
             raise Exception('Invalid time_unit %s' % time_unit)
 
         granularity, frequency, max_span = granularityInfo[time_unit]
-        raw = self.client.get_samples_stats(sensor_id=self.monitorID,
+        raw = self.client.get_samples_stats(sensor_id=self.monitor_id,
                                             start=start.isoformat(),
                                             end=end.isoformat(),
                                             granularity=granularity,
@@ -71,12 +71,11 @@ class NeurioHandler:
         raw_data = self.download_raw(start, end, time_unit)
 
         df = pd.DataFrame(raw_data)
-        df.consumptionEnergy *= (1/1000./3600.) # convert Ws -> kWH
+        df.consumptionEnergy *= (1/1000./3600.)  # convert Ws -> kWH
 
-        # raw start and end dates are returned in GMT:  eg '2018-08-08T00:50:00.000Z'
-        #  after being put into data frame, formatted like
-        #  convert to local timezone, eg:2018-08-08T00:45:00.000Z, 2018-08-08T00:45:03.314Z
-        #  example format afterwards is '2018-08-08 01:10:00-05:00'
+        # raw start and end dates are returned in UTC:  eg '2018-08-08T00:50:00.000Z'
+        #  after being put into data frame, need to convert to local timezone
+        #  e.g. '2018-08-08 01:10:00-05:00'
         df.start = pd.to_datetime(df.start).dt.tz_localize('UTC').dt.tz_convert(self.time_zone)
         df.end   = pd.to_datetime(  df.end).dt.tz_localize('UTC').dt.tz_convert(self.time_zone)
 
