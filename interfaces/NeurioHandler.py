@@ -76,7 +76,7 @@ class NeurioHandler:
         # raw start and end dates are returned in UTC:  eg '2018-08-08T00:50:00.000Z'
         #  after being put into data frame, need to convert to local timezone
         #  e.g. '2018-08-08 01:10:00-05:00'
-        df.start = pd.to_datetime(df.start).dt.tz_localize('UTC').dt.tz_convert(self.time_zone)
-        df.end   = pd.to_datetime(  df.end).dt.tz_localize('UTC').dt.tz_convert(self.time_zone)
+        df.start = pd.to_datetime(df.start).dt.tz_convert(self.time_zone)
+        df.end   = pd.to_datetime(  df.end).dt.tz_convert(self.time_zone)
 
         return df
