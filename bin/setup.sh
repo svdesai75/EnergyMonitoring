@@ -11,3 +11,6 @@ pip install ipykernel
 pip install SQLAlchemy
 pip install neurio
 pip install solaredge
+# needed only for investigation and development purposes
+#pip install xlrd
+
