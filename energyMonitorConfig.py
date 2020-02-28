@@ -2,18 +2,16 @@
 import os
 from configparser import ConfigParser
 
-energyMonitorDir=os.path.expandvars('${HOME}/.EnergyMonitor')
-interfaceDBConnectionString= 'sqlite:///' + os.path.join(energyMonitorDir, 'EnergyMonitor.db')
+energyMonitorDir = os.path.expandvars('${HOME}/.EnergyMonitor')
+interfaceDBConnectionString = 'sqlite:///' + os.path.join(energyMonitorDir, 'EnergyMonitor.db')
+
 
 def loadCfg():
     
-    cfgFileName=os.path.join(energyMonitorDir,'config')
+    cfg_file_name = os.path.join(energyMonitorDir,'config')
 
-    cfg=ConfigParser()
-    cfg.read(cfgFileName)
+    cfg = ConfigParser()
+    cfg.read(cfg_file_name)
 
     return cfg
 
-#def dbConnect(cfg):
-#
-#    dbFileName=
