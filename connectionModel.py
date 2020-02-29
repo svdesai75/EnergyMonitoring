@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from energyMonitorConfig import *
 from interfaces import SolarEdgeHandler
 from interfaces import NeurioHandler
+from interfaces import UtilityAPIHandler
 
 import pandas as pd
 
@@ -65,10 +66,22 @@ class ConsumptionMonitor(Base):
             raise Exception("Unknown monitor type %s" % self.monitorType)
 
     def download(self, start, end, time_unit):
-        data = self.client.download(start, end, time_unit)
+        data = self.client.download_as_df(start, end, time_unit)
         return data
 
-# Todo: Add interface to utilityAPI
+
+class UtilityBilling(Base):
+    __tablename__ = 'utilityBilling'
+
+    id                 = Column(String(250), nullable=False, primary_key=True)
+    timezone           = Column(String(250), nullable=False)
+    billing_start_time = Column(String(250), nullable=False)
+
+    handler            = None
+
+    @orm.reconstructor
+    def init_on_load(self):
+        self.handler = UtilityAPIHandler.UtilityAPIHandler(cfg, self.id, self.timezone, self.billing_start_time)
 
 
 class RentalUnit(Base):
@@ -83,6 +96,10 @@ class RentalUnit(Base):
     consumptionMonitorID = Column(String(250), ForeignKey('consumptionMonitor.id'), nullable=False)
     consumptionFraction  = Column(      Float, nullable=False)
     consumptionMonitor   = relationship(ConsumptionMonitor)
+
+    billingMeterID       = Column(String(250), ForeignKey('utilityBilling.id'), nullable=False)
+    billingFraction      = Column(      Float, nullable=False)
+    utilityBilling       = relationship(UtilityBilling)
 
     def getEnergyData(self, startTime, endTime, timeUnit):
         generationData  = self.generationMonitor .download(startTime, endTime, timeUnit)
