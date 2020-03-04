@@ -15,7 +15,7 @@ Base = declarative_base()
 
 
 def create_db_engine():
-    return create_engine(interfaceDBConnectionString)
+    return create_engine(interface_db_connection_string)
 
 
 def db_connect(db_engine):
@@ -114,7 +114,7 @@ class RentalUnit(Base):
 #        return
 
 
-cfg = loadCfg()
+cfg = load_cfg()
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
