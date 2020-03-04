@@ -20,9 +20,10 @@ class UtilityAPIHandler:
         response = requests.get(uri, headers=header)
         return response.text
 
-    def download_lineitems(self):
+    def download_line_items(self):
         line_item_response = self.download_data("files/meters_lineitems_csv")
-        tmpdf = pd.read_csv(io.StringIO(line_item_response))
+        tmpdf = pd.read_csv(io.StringIO(line_item_response),
+                            parse_dates=["bill_start_date", "bill_end_date"])
 
         return tmpdf
 
