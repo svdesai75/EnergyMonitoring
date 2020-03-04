@@ -1,11 +1,8 @@
 #!/usr/bin/env python
-import os
 import neurio
 import pandas as pd
 import pytz
-from datetime import datetime, timedelta
 
-from energyMonitorConfig import energyMonitorDir
 import logger
 
 # for granularity passed to API, if minutes, frequency must be multiple of 5
@@ -28,10 +25,10 @@ class NeurioHandler:
         self.time_zone = time_zone
         self.activation_time = activation_time
 
-        clientID = cfg.get(self.monitorType, "clientID")
+        client_id = cfg.get(self.monitorType, "clientID")
         secret = cfg.get(self.monitorType, "secret")
 
-        tp = neurio.TokenProvider(key=clientID, secret=secret)
+        tp = neurio.TokenProvider(key=client_id, secret=secret)
         self.client = neurio.Client(token_provider=tp)  # interface to remote data
 
     def download_raw(self, start, end, time_unit):
