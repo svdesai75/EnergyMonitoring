@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 import logger
 
 logger.logLevel = "debug"
-engine = createDBEngine()
-session = dbConnect(engine)
+engine = create_db_engine()
+session = db_connect(engine)
 
 units = session.query(RentalUnit).all()
 lastUnit = units[-1]

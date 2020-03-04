@@ -2,8 +2,8 @@
 from connectionModel import *
 from datetime import datetime, timedelta
 
-engine = createDBEngine()
-session = dbConnect(engine)
+engine = create_db_engine()
+session = db_connect(engine)
 
 units = session.query(RentalUnit).all()
 lastUnit = units[-1]
@@ -16,5 +16,5 @@ end_date = datetime.now()
 start_date = end_date - timedelta(days=1)
 print(start_date)
 print(end_date)
-print(se.download(start_date, end_date, 'HOUR'))
+print(se.handler.download(start_date, end_date, 'HOUR'))
 
