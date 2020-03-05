@@ -64,7 +64,7 @@ class NeurioHandler:
 
         return raw
 
-    def download_as_df(self, start, end, time_unit):
+    def download(self, start, end, time_unit):
         raw_data = self.download_raw(start, end, time_unit)
 
         df = pd.DataFrame(raw_data)

@@ -31,5 +31,5 @@ print("  End: ",   endDate)
 hours = (endDate - startDate).total_seconds()/3600
 print("Duration (h): ", hours)
 
-dfSamples = handler.download_as_df(startDate, endDate, "HOUR")
+dfSamples = handler.download(startDate, endDate, "HOUR")
 print(dfSamples)
