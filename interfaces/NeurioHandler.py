@@ -24,6 +24,7 @@ class NeurioHandler:
         self.monitor_id = monitor_id
         self.time_zone = time_zone
         self.activation_time = activation_time
+        self.query_period = pd.Timedelta(31, 'D')
 
         client_id = cfg.get(self.monitorType, "clientID")
         secret = cfg.get(self.monitorType, "secret")
@@ -77,3 +78,19 @@ class NeurioHandler:
         df.end   = pd.to_datetime(  df.end).dt.tz_convert(self.time_zone)
 
         return df
+
+    def batch_download(self, start, end, time_unit):
+
+        out_df = None
+        query_start = start
+        while query_start < end:
+            query_end = min(query_start + self.query_period, end)
+            tmp_df = self.download(query_start, query_end, time_unit)
+            if out_df is None:
+                out_df = tmp_df
+            else:
+                out_df = out_df.append(tmp_df, ignore_index=True)
+
+            query_start = query_end
+
+        return out_df

@@ -12,11 +12,12 @@ class SolarEdgeHandler:
 
         key         = cfg.get("solaredge", "key")
 
-        self.client =  solaredge.Solaredge(key)
+        self.client = solaredge.Solaredge(key)
 
         # thus far, there appears to be no need to make use of this, but we at least ensure the field is there
         # in case this turns out not to be the case
-        self.timeZone = time_zone
+        self.time_zone = time_zone
+        self.query_period = pd.Timedelta(31, 'D')
 
     def download(self, start, end, time_unit):
 
@@ -36,3 +37,19 @@ class SolarEdgeHandler:
         site_energy.date = pd.to_datetime(site_energy.date)
         site_energy.Production *= (1/1000.)  # convert Wh -> kWH
         return site_energy
+
+    def batch_download(self, start, end, time_unit):
+
+        out_df = None
+        query_start = start
+        while query_start < end:
+            query_end = min(query_start + self.query_period, end)
+            tmp_df = self.download(query_start, query_end, time_unit)
+            if out_df is None:
+                out_df = tmp_df
+            else:
+                out_df = out_df.append(tmp_df, ignore_index=True)
+
+            query_start = query_end
+
+        return out_df
