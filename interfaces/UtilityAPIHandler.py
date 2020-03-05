@@ -24,6 +24,8 @@ class UtilityAPIHandler:
         line_item_response = self.download_data("files/meters_lineitems_csv")
         tmpdf = pd.read_csv(io.StringIO(line_item_response),
                             parse_dates=["bill_start_date", "bill_end_date"])
+        tmpdf.bill_start_date = tmpdf.bill_start_date.dt.tz_localize(self.timezone)
+        tmpdf.bill_end_date = tmpdf.bill_end_date.dt.tz_localize(self.timezone)
 
-        return tmpdf
+        return tmpdf.query("bill_start_date >= @self.activation_time")
 
