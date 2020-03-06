@@ -62,6 +62,11 @@ class NeurioHandler:
                                             granularity=granularity,
                                             frequency=frequency)
         # TODO Implement error checking on response
+        if type(raw) == dict:
+            # other keys = status, code
+            # status  = raw["status"]
+            message = raw["message"]
+            raise ConnectionRefusedError(message)
 
         return raw
 
