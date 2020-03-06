@@ -114,8 +114,6 @@ def generate_bills(property_id):
         reset_index()
     correction_factor.columns = ['start_date', 'correction_factor']
 
-    # expression = "@unit.billingFraction*(flat_cost+ incentives_cost) + effective_rate*(consumption-generation)"
-    # tmp["billed_cost"] = tmp.eval(expression)
     unit_bill_expression = "billing_fraction * (flat_cost+ incentives_cost) + unit_energy_cost"
     unit_data = unit_data.merge(correction_factor, on="start_date").\
         assign(unit_energy=lambda x: x.eval("correction_factor * device_net"),
