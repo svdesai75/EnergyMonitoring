@@ -127,4 +127,5 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--property", help="property to generate bills for")
     args = parser.parse_args()
 
-    generate_bills(args.property)
+    bills = generate_bills(args.property)
+    print(bills)
