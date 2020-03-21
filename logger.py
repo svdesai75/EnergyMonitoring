@@ -1,27 +1,37 @@
 #!/usr/bin/env python
 import sys
 
-logFile=sys.stdout
-logLevels=["debug","info","warn","error"]
-logLevel="debug"
+log_file = sys.stdout
+log_levels = ["debug", "info", "warn", "error"]
+logLevel = "debug"
 
-def printLevel(messageLevel):
-    messageLevel=logLevels.index(messageLevel)
-    threshold=logLevels.index(logLevel)
-    return messageLevel >= threshold
 
-def printMessage(message):
-    logFile.write(message)
-    logFile.write("\n")
+def print_level(message_level):
+    message_level = log_levels.index(message_level)
+    threshold = log_levels.index(logLevel)
+    return message_level >= threshold
+
+
+def print_message(message):
+    log_file.write(message)
+    log_file.write("\n")
+
 
 def debug(message):
-    if printLevel("debug"): printMessage(message)
+    if print_level("debug"):
+        print_message(message)
+
 
 def info(message):
-    if printLevel("info"): printMessage(message)
+    if print_level("info"):
+        print_message(message)
+
 
 def warn(message):
-    if printLevel("warn"): printMessage(message)
+    if print_level("warn"):
+        print_message(message)
+
 
 def error(message):
-    if printLevel("error"): printMessage(message)
+    if print_level("error"):
+        print_message(message)
