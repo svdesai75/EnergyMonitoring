@@ -3,12 +3,12 @@ import sys
 
 log_file = sys.stdout
 log_levels = ["debug", "info", "warn", "error"]
-logLevel = "debug"
+log_level = "debug"
 
 
 def print_level(message_level):
     message_level = log_levels.index(message_level)
-    threshold = log_levels.index(logLevel)
+    threshold = log_levels.index(log_level)
     return message_level >= threshold
 
 

@@ -3,7 +3,7 @@ import pytz
 from datetime import datetime, timedelta
 import logger
 
-logger.logLevel = "debug"
+logger.log_level = "debug"
 engine = create_db_engine()
 session = db_connect(engine)
 
