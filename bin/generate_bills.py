@@ -5,7 +5,7 @@ import re
 import numpy as np
 import pandas as pd
 
-logger.logLevel = "info"
+logger.log_level = "info"
 
 
 class BillGenerator:
