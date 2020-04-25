@@ -18,6 +18,11 @@ class UtilityAPIHandler:
         uri = f"{base_uri}/{endpoint}?meters={self.meter_id}"
         header = {"Authorization": f"Bearer {self.token}"}
         response = requests.get(uri, headers=header)
+        if not response.status_code == 200:
+            msg = "Failed to fetch billing data. UtilityAPI Response:\n"
+            msg += response.text
+            raise ConnectionError(msg)
+
         return response.text
 
     def download_line_items(self):
