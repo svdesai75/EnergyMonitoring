@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from energyMonitorConfig import *
+from energyMonitoring.energyMonitorConfig import *
 from interfaces import SolarEdgeHandler
 from interfaces import NeurioHandler
 from interfaces import UtilityAPIHandler
