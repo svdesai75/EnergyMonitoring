@@ -2,6 +2,7 @@
 import neurio
 import pandas as pd
 import pytz
+import time
 
 import logger
 
@@ -97,5 +98,6 @@ class NeurioHandler:
                 out_df = out_df.append(tmp_df, ignore_index=True)
 
             query_start = query_end
+            time.sleep(1)
 
         return out_df
