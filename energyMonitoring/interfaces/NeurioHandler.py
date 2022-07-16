@@ -4,7 +4,7 @@ import pandas as pd
 import pytz
 import time
 
-import logger
+from energyMonitoring import logger
 
 # for granularity passed to API, if minutes, frequency must be multiple of 5
 granularityInfo = dict()

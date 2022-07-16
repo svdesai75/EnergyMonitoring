@@ -1,6 +1,6 @@
 import pandas as pd
 import solaredge
-import logger
+from energyMonitoring import logger
 
 
 class SolarEdgeHandler:

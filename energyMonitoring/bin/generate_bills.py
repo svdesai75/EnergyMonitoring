@@ -1,5 +1,5 @@
 from energyMonitoring.connectionModel import *
-import logger
+from energyMonitoring import logger
 import argparse
 import re
 import numpy as np

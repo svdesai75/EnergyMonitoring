@@ -1,7 +1,7 @@
 from energyMonitoring.connectionModel import *
 import pytz
 from datetime import datetime, timedelta
-import logger
+from energyMonitoring import logger
 
 logger.log_level = "debug"
 engine = create_db_engine()
