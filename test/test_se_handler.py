@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from connectionModel import *
+from energyMonitoring.connectionModel import *
 from datetime import datetime, timedelta
 
 engine = create_db_engine()

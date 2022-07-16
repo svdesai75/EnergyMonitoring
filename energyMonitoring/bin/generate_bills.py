@@ -1,4 +1,4 @@
-from connectionModel import *
+from energyMonitoring.connectionModel import *
 import logger
 import argparse
 import re

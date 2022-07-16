@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from connectionModel import *
+from energyMonitoring.connectionModel import *
 import pytz
 from datetime import datetime, timedelta
 import logger
