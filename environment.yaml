@@ -1,4 +1,4 @@
-name: obrp_scoe
+name: energy_monitor
 channels:
   - conda-forge
 dependencies:
